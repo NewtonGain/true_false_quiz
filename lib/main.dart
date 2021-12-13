@@ -82,6 +82,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
+        Row(children: addIconsList),
         Expanded(
           child: Padding(
             
@@ -95,7 +96,9 @@ class _QuizPageState extends State<QuizPage> {
                   print('You got wrong answer');
                 }
                 setState(() {
-                  questionsIndex++;
+                   addIconsList.add(Icon(Icons.trending_up,
+                color: Colors.orange,),);
+                 questionsIndex++;
                 });
               },
               child: Text('True ',textAlign: TextAlign.center,
@@ -105,6 +108,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
+        
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -118,6 +122,8 @@ class _QuizPageState extends State<QuizPage> {
                   print('You got wrong answer');
                 }
                 setState(() {
+                  addIconsList.add(Icon(Icons.wrong_location_sharp,
+                color: Colors.black,),);
                  questionsIndex++;
                 
                 });
@@ -129,7 +135,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        Row(children: addIconsList),
+        
        
       ],
      
