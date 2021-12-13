@@ -27,12 +27,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon>  addIconsList=[
-    Icon(Icons.check,color: Colors.green,),
-        Icon(Icons.close,color: Colors.red,),
-        Icon(Icons.check,color: Colors.green,),
-        Icon(Icons.close,color: Colors.red,),
-        Icon(Icons.check,color: Colors.green,),
-        Icon(Icons.close,color: Colors.red,),
+    
 
   ];
   @override
