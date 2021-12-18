@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:true_false_quiz/question_answer.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+QuestionsBrain questions = QuestionsBrain();
 
 void main() => runApp(TrueFalse());
 
 class TrueFalse extends StatelessWidget {
-  const TrueFalse({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('True False')),
+          title: Text('True False'),
+          centerTitle: true,
         ),
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: QuizPage(),
+        backgroundColor: Colors.teal,
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: QuizPage(),
+            ),
           ),
         ),
       ),
@@ -30,39 +35,40 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Icon> addIconsList = [];
-  int questionsIndex = 0;
+  List<Icon> addIconList = [];
 
-  List<String> addQuestionList = [
-    'Who is your hero?',
-    'If you could live anywhere, where would it be?',
-    'What is your biggest fear?',
-    'What is your favorite family vacation?',
-    'What would you change about yourself if you could?',
-    'What really makes you angry?',
-    'What motivates you to work hard?',
-    'What is your favorite thing about your career?',
-    'What is your biggest complaint about your job?',
-    'What is your proudest accomplishment?',
-  ];
-  List<bool> answers = [
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-  ];
-  int i = 0;
+  answerCheck(bool valueChecking) {
+    bool correctAnswer = questions.getQuestionAnswer();
+    setState(() {
+      if (questions.isFinished() == true) {
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "FINISH",
+          desc: "You have reached the last quiz question.",
+        ).show();
+        questions.reset();
+        addIconList = [];
+      } else {
+        if (correctAnswer == valueChecking) {
+          addIconList.add(
+            Icon(Icons.check, color: Colors.green),
+          );
+        } else {
+          addIconList.add(
+            Icon(Icons.close, color: Colors.red),
+          );
+        }
+        questions.nextPage();
+      }
+      ;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
@@ -71,43 +77,35 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(15.0),
             child: Center(
               child: Text(
-                addQuestionList[questionsIndex],
+                questions.getQuestionText(),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
         ),
-        Row(children: addIconsList),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: FlatButton(
               color: Colors.green,
-              onPressed: () {
-                setState(() {
-                  if (answers[questionsIndex] == true && answers[i] != null)
-                    addIconsList.add(Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ));
-                  else if (answers[i] != null)
-                    addIconsList.add(Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ));
-                  i++;
-                  if (questionsIndex < 10) questionsIndex++;
-                });
-              },
               child: Text(
-                'True ',
+                'True',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              onPressed: () {
+                //questions.questionBank[questionIndex].questionAnswer = true;
+                answerCheck(true);
+              },
             ),
           ),
         ),
@@ -115,33 +113,23 @@ class _QuizPageState extends State<QuizPage> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: FlatButton(
-              color: Colors.red,
-              onPressed: () {
-                setState(() {
-                  if (answers[questionsIndex] == true && answers[i] != null)
-                    addIconsList.add(Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ));
-                  else if (answers[i] != null)
-                    addIconsList.add(Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ));
-                  i++;
-                  if (questionsIndex < 10) questionsIndex++;
-                });
-              },
-              child: Text(
-                'False ',
-                textAlign: TextAlign.center,
-                style: TextStyle(
+                color: Colors.red,
+                child: Text(
+                  'False',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  answerCheck(false);
+                }),
           ),
+        ),
+        Row(
+          children: addIconList,
         ),
       ],
     );
